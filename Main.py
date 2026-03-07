@@ -39,11 +39,11 @@ class TicTacToeMod(loader.Module):
         )
 
     async def _click(self, call, board, idx, turn):
-        if board[idx] != " " or self._check(board):
+        if board[idx] != " " or self._check_win(board):
             return await call.answer("Игра завершена или клетка занята!")
 
         board[idx] = turn
-        win = self._check(board)
+        win = self._check_win(board)
         
         if win:
             await self._render(call.message, board, turn, winner=turn)
@@ -54,7 +54,7 @@ class TicTacToeMod(loader.Module):
             await self._render(call.message, board, next_turn)
         await call.answer()
 
-    def _check(self, b):
+    def _check_win(self, b):
         v = [(0,1,2),(3,4,5),(6,7,8),(0,3,6),(1,4,7),(2,5,8),(0,4,8),(2,4,6)]
         for r in v:
             if b[r[0]] == b[r[1]] == b[r[2]] != " ":
