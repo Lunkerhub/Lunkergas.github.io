@@ -15,6 +15,7 @@ class TicTacToeMod(loader.Module):
 
     async def _render(self, message, board, turn, winner=None):
         kb = []
+        # Собираем игровое поле
         for i in range(0, 9, 3):
             row = []
             for j in range(3):
@@ -27,6 +28,9 @@ class TicTacToeMod(loader.Module):
                 })
             kb.append(row)
 
+        # Добавляем кнопку рестарта отдельной строкой снизу
+        kb.append([{"text": "🔄 Рестарт", "callback": self.krestcmd}])
+
         status = f"Ход: {turn}"
         if winner:
             status = "🤝 Ничья!" if winner == "draw" else f"🏆 Победил: {winner}"
@@ -34,7 +38,6 @@ class TicTacToeMod(loader.Module):
         await self.inline.form(
             text=f"<b>Игра: Крестики-нолики</b>\n{status}",
             message=message,
-            controls=[[{"text": "🔄 Рестарт", "callback": self.krestcmd}]],
             reply_markup=kb
         )
 
