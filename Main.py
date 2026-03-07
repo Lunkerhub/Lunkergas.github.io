@@ -2,11 +2,10 @@
 
 from .. import loader, utils
 from telethon.tl.types import Message
-import asyncio
 
 @loader.tds
 class KrestikiPvPMod(loader.Module):
-    """Крестики-нолики 3x3 по координатам (1а, 2б...)"""
+    """Крестики-нолики 3x3: управление текстом (1а, 2б...)"""
     strings = {"name": "KrestikiPvP"}
 
     async def client_ready(self, client, db):
@@ -14,7 +13,7 @@ class KrestikiPvPMod(loader.Module):
         self.client = client
 
     async def krestcmd(self, message: Message):
-        """<@юзернейм> - Играть через текст (1а, 2б...)"""
+        """<@юзернейм> - Играть (координаты: 1а, 2б...)"""
         args = utils.get_args_raw(message)
         if not args:
             return await utils.answer(message, "<b>Укажи @юзернейм противника!</b>")
@@ -84,4 +83,7 @@ class KrestikiPvPMod(loader.Module):
 
     def _check(self, b):
         v = [(0,1,2),(3,4,5),(6,7,8),(0,3,6),(1,4,7),(2,5,8),(0,4,8),(2,4,6)]
-        return any(b[r[0]] == b[r[1]] == b[r[2]] != "⬜️" for r in v)
+        for r in v:
+            if b[r[0]] == b[r[1]] == b[r[2]] != "⬜️":
+                return True
+        return False
