@@ -34,13 +34,13 @@ class TicTacToeMod(loader.Module):
         await self.inline.form(
             text=f"<b>Игра: Крестики-нолики</b>\n{status}",
             message=message,
-            control_widgets=[[{"text": "🔄 Рестарт", "callback": self.krestcmd}]],
+            controls=[[{"text": "🔄 Рестарт", "callback": self.krestcmd}]],
             reply_markup=kb
         )
 
     async def _click(self, call, board, idx, turn):
         if board[idx] != " " or self._check(board):
-            return await call.answer("Нельзя сюда жать!")
+            return await call.answer("Игра завершена или клетка занята!")
 
         board[idx] = turn
         win = self._check(board)
@@ -56,4 +56,7 @@ class TicTacToeMod(loader.Module):
 
     def _check(self, b):
         v = [(0,1,2),(3,4,5),(6,7,8),(0,3,6),(1,4,7),(2,5,8),(0,4,8),(2,4,6)]
-        return any(b[r[0]] == b[r[1]] == b[r[2]] != " " for r in v)
+        for r in v:
+            if b[r[0]] == b[r[1]] == b[r[2]] != " ":
+                return True
+        return False
